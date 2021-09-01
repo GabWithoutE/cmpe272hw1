@@ -1,0 +1,27 @@
+---
+# This playbook deploys the helloworldsjsu application to toy servers
+
+- name: Deploy helloworldsjsu server
+  hosts: toyservers
+  
+  tasks:
+  - name: copy server binary
+    ansible.builtin.copy:
+            src: ./bin/helloworldsjsuserver
+            dest: ~/helloworldsjsuserver
+            owner: gchen
+            mode: '0701'
+    tags:
+            - deploy
+  - name: run server binary
+    shell: "nohup ~/helloworldsjsuserver 2>&1 &" 
+    tags:
+            - run
+  - name: kill server process
+    command: "killall helloworldsjsuserver"
+    tags:
+            - stop
+  - name: delete binary 
+    command: "rm ~/helloworldsjsuserver"
+    tags:
+            - remove 
